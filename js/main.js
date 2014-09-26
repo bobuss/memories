@@ -1,12 +1,36 @@
+/*
+* SC68 Web player interface
+*
+* 2014 Bertrand Tornil
+*
+* Lots of parts from
+* See Juergen Wothke works on https://github.com/wothke/sc68-2.2.1
+*
+* And the port to CODEF : http://namwollem.blogspot.co.uk/
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.le
+*/
+
 (function($) {
   $( document ).ready(function() {
     var songs = [
-      'musics/EQX1.sndh',
+      'musics/Virtual_Escape_Theme.sndh',
+      'musics/Virtual_Escape_Enhanced.sndh',
       'musics/EQX2.sndh',
       'musics/HMD1.sndh',
       'musics/HMD2.sndh',
-      'musics/HMD3.sndh',
-      'musics/Virtual_Escape_Theme.sndh',
+      'musics/HMD3.sndh'
     ];
 
 
@@ -21,8 +45,6 @@
 
     var whichtrack = 1;
     var defaultSongTimeout= 15*60*1000;
-
-
 
     function doOnLoad() {
       audio.initialAudioSetup();
@@ -117,8 +139,17 @@
         xhr.onload = function (oEvent) {
           player.loadData(xhr.response, track, defaultSongTimeout);
           self.updatePlaylistDisplay();
+          self.updateTrackInfos();
         }.bind(this);
         xhr.send(null);
+      },
+      togglePause: function() {
+        player.isPaused = !player.isPaused;
+        if (player.isPaused) {
+          $(".action-pause span").attr("class", "glyphicon glyphicon-pause");
+        } else {
+          $(".action-pause span").attr("class", "glyphicon glyphicon-play");
+        }
       },
       startMusicPlayback: function() {
         player.setPauseMode(false);
@@ -155,6 +186,11 @@
             $(song).removeClass("active")
           }
         });
+      },
+      updateTrackInfos: function() {
+        $(".desc").html(
+          '<h3>' + player.title + '</h3>' +
+          '<p>by ' + player.author + '</p>');
       }
     };
 
@@ -162,58 +198,29 @@
     document.onkeydown = KeyCheck;
 
     function KeyCheck(ev){
-      if (!ev) var ev=window.event;
+      if (!ev) {
+        var ev=window.event;
+      }
       var KeyID = ev.keyCode;
 
-      switch(KeyID){
-        // key 1
-        case 49:
-          whichtrack=-1;
-          audio.current=whichtrack;
-          audio.playNextSong();
-
+      switch(KeyID) {
+        // space key : pause toggle
+        case 32:
+          audio.togglePause();
           ev.preventDefault();
-                return false;
+          return false;
           break;
-        // key 2
-        case 50:
-          whichtrack=0;
-          audio.current=whichtrack;
-          audio.playNextSong();
+        // up key : play previous song
+        case 38:
+          audio.playPreviousSong();
           ev.preventDefault();
-                return false;
+          return false;
           break;
-        // key 3
-        case 51:
-          whichtrack=1;
-          audio.current=whichtrack;
+        // up key : play next song
+        case 40:
           audio.playNextSong();
           ev.preventDefault();
-                return false;
-          break;
-        // key 4
-        case 52:
-          whichtrack=2;
-          audio.current=whichtrack;
-          audio.playNextSong();
-          ev.preventDefault();
-                return false;
-          break;
-        // key 5
-        case 53:
-          whichtrack=3;
-          audio.current=whichtrack;
-          audio.playNextSong();
-          ev.preventDefault();
-                return false;
-          break;
-        // key 6
-        case 54:
-          whichtrack=4;
-          audio.current=whichtrack;
-          audio.playNextSong();
-          ev.preventDefault();
-                return false;
+          return false;
           break;
       }
     }
@@ -223,7 +230,7 @@
     });
 
     $(".action-pause").click(function(){
-      player.isPaused = !player.isPaused;
+      audio.togglePause();
     })
 
     $(".action-forward").click(function(){
