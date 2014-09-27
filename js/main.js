@@ -4,7 +4,7 @@
 * 2014 Bertrand Tornil
 *
 * Lots of parts from
-* See Juergen Wothke works on https://github.com/wothke/sc68-2.2.1
+* Juergen Wothke works on https://github.com/wothke/sc68-2.2.1
 *
 * And the port to CODEF : http://namwollem.blogspot.co.uk/
 *
