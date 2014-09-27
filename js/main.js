@@ -144,7 +144,7 @@
       },
       togglePause: function() {
         player.isPaused = !player.isPaused;
-        if (player.isPaused) {
+        if (!player.isPaused) {
           $(".action-pause span").attr("class", "glyphicon glyphicon-pause");
         } else {
           $(".action-pause span").attr("class", "glyphicon glyphicon-play");
