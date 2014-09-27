@@ -43,8 +43,7 @@
       alert('Web Audio API is not supported in this browser (get Chrome 18 or Firefox 26)');
     }
 
-    var whichtrack = 1;
-    var defaultSongTimeout= 15*60*1000;
+    var defaultSongTimeout = 15*60*1000;
 
     function doOnLoad() {
       audio.initialAudioSetup();
@@ -195,38 +194,29 @@
     };
 
 
-    document.onkeydown = KeyCheck;
+    $(document).keydown(function(ev){
 
-    function KeyCheck(ev){
-      if (!ev) {
-        var ev=window.event;
-      }
-      var KeyID = ev.keyCode;
+      switch(ev.which) {
 
-      switch(KeyID) {
         // space key : pause toggle
         case 32:
           audio.togglePause();
           ev.preventDefault();
-          return false;
-          break;
+        break;
+
         // up key : play previous song
         case 38:
           audio.playPreviousSong();
           ev.preventDefault();
-          return false;
-          break;
+        break;
+
         // up key : play next song
         case 40:
           audio.playNextSong();
           ev.preventDefault();
-          return false;
-          break;
+        break;
       }
-    }
 
-    $(".action-stop").click(function(){
-      player.setPauseMode(true);
     });
 
     $(".action-pause").click(function(){
